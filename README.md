@@ -3,7 +3,8 @@
 
 A simple and efficient task management app built with **React**, **JavaScript**, and **Tailwind CSS**. The app allows you to add, delete, and search for tasks. Additionally, it includes a fun confetti animation using the **Confetti** library when marking tasks as completed.
 
-*![image](https://github.com/user-attachments/assets/f7304581-f62b-41bc-801b-3532fe2f3055)*
+*![image](https://github.com/user-attachments/assets/bdf8448e-0e50-46d8-9e0e-d1d756bdfcd3)
+*
 
 ---
 
