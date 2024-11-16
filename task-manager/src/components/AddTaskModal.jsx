@@ -49,7 +49,7 @@ const AddTaskModal = ({ isOpen, onClose }) => {
             id="title"
             name="title"
             maxLength={22}
-            placeholder="write a task within 50 letters"
+            placeholder="write a task "
             className="font-normal w-full h-14  border border-black/10 rounded-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
             onChange={handleChange}
             value={task.title}
@@ -59,7 +59,7 @@ const AddTaskModal = ({ isOpen, onClose }) => {
             id="description"
             name="description"
             maxLength={150}
-            placeholder="write the description within 200 characters"
+            placeholder="write the description "
             className="font-normal w-full h-20 border border-black/10 rounded-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
             onChange={handleChange}
             value={task.description}

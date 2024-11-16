@@ -58,7 +58,7 @@ const Task = ({ task }) => {
         className=" row-span-1 flex flex-row justify-between
        items-center gap-4 px-2"
       >
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-2">
           <button
             onClick={deleteTaskHandler}
             className=" hover:bg-yellow-100 p-2 rounded-md"
