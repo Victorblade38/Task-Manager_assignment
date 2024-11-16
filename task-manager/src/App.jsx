@@ -96,6 +96,7 @@ function App() {
               name="sorting"
               id="sorting"
               className="h-14 p-4 bg-white focus:outline-none text-base font-semibold rounded-lg shadow-md "
+              disabled
             >
               <option value="date">Date modified</option>
               <option value="priority">Priority</option>
