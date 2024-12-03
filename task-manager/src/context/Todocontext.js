@@ -7,12 +7,14 @@ export const Todocontext = createContext({
       title: "Task message",
       description: "description",
       priority: 1,
+      date: "2024-12-05",
       completed: false,
     },
   ],
-  addTask: (todo) => {},
+  addTask: (task) => {},
   deleteTask: (id) => {},
   toggleComplete: (id) => {},
+  updateTask: (task) => {},
 });
 
 export const useTask = () => {

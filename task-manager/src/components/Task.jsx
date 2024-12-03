@@ -4,9 +4,11 @@ import { deleteIcon, medalIcon } from "../assets";
 import confetti from "canvas-confetti";
 
 const Task = ({ task }) => {
-  const { deleteTask, toggleComplete } = useTask();
+  const { deleteTask, toggleComplete, updateTask } = useTask();
   const [isFading, setIsFading] = useState(false);
-  const { title, description, priority, completed } = task;
+  const [isEditing, setIsEditing] = useState(false); // State to track editing mode
+  const [editedTask, setEditedTask] = useState(task); // State for edited task values
+  const { title, description, priority, date, completed } = editedTask;
 
   const launchConfetti = () => {
     confetti({
@@ -18,11 +20,20 @@ const Task = ({ task }) => {
     });
   };
 
+  const checkDueDate = () => {
+    const today = new Date();
+    const dueDate = new Date(date);
+    return today > dueDate;
+  };
+
   const deleteTaskHandler = () => {
-    setIsFading(true);
-    setTimeout(() => {
-      deleteTask(task.id);
-    }, 500);
+    const result = window.confirm("Do you want to delete the task?");
+    if (result) {
+      setIsFading(true);
+      setTimeout(() => {
+        deleteTask(task.id);
+      }, 500);
+    }
   };
 
   const toggleHandler = (e) => {
@@ -32,51 +43,129 @@ const Task = ({ task }) => {
     }
   };
 
+  const handleEditToggle = () => {
+    setIsEditing((prev) => !prev); // Toggle between edit and view mode
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedTask((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveChanges = () => {
+    updateTask(editedTask); // Save the edited task
+    setIsEditing(false); // Switch back to view mode
+  };
+
   return (
     <div
-      className={`w-96 h-64 bg-white  flex flex-col justify-center gap-2 p-6 rounded-lg shadow-lg transition-opacity duration-500 ${
+      className={` h-40 md:w-80 md:h-64 bg-white shadow-md lg:shadow-lg flex flex-col justify-center gap-2 p-3 md:p-6 rounded-lg  transition-opacity duration-500 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
     >
-      <p
-        className={`w-full h-12  text-3xl font-bold ${
-          completed ? "line-through text-slate-600" : "text-slate-800"
-        }`}
-      >
-        {title}
-      </p>
-      <hr />
-      <p
-        className={` w-full h-24 row-span-2 font-medium  ${
-          completed ? "line-through text-slate-500" : "text-slate-700"
-        }`}
-      >
-        {description}
-      </p>
+      {isEditing ? (
+        <div className="bg-white border-2 rounded-md flex flex-col gap-2 p-2">
+          <input
+            type="text"
+            name="title"
+            maxLength={22}
+            value={title}
+            onChange={handleInputChange}
+            className="text-lg md:text-2xl font-bold text-slate-800"
+          />
+          <textarea
+            name="description"
+            rows={2}
+            maxLength={100}
+            value={description}
+            onChange={handleInputChange}
+            className="text-sm text-slate-700 resize-none"
+          />
+          <input
+            type="date"
+            name="date"
+            value={date}
+            onChange={handleInputChange}
+            className="text-sm text-slate-600"
+          />
+          <div className="flex gap-2 mt-auto">
+            <button
+              onClick={handleSaveChanges}
+              className="text-sm text-white bg-green-500 p-2 rounded"
+            >
+              Save
+            </button>
+            <button
+              onClick={handleEditToggle}
+              className="text-sm text-white bg-gray-400 p-2 rounded"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <p
+            className={`md:h-12 text-lg md:text-2xl font-bold ${
+              completed ? "line-through text-slate-600" : "text-slate-800"
+            }`}
+          >
+            {title}
+          </p>
+          <hr />
+          <p
+            className={`md:h-24 row-span-2 text-sm font-medium ${
+              completed ? "line-through text-slate-500" : "text-slate-700"
+            }`}
+          >
+            {description}
+          </p>
+          <div className="mt-auto row-span-1 flex flex-row justify-between items-center md:gap-4">
+            <div className="flex flex-row items-center ">
+              <button onClick={deleteTaskHandler} className="rounded-md">
+                <img
+                  src={medalIcon}
+                  alt="delete icon"
+                  className="w-4 h-4 md:w-5 md:h-5"
+                />
+              </button>
+              <p className="text-sm font-medium text-slate-600">
+                {" "}
+                - {priority}
+              </p>
+            </div>
+            <p
+              className={` text-sm font-medium ${
+                checkDueDate() ? "text-red-600" : "text-slate-600"
+              }`}
+            >
+              {date}
+            </p>
+            <button
+              onClick={handleEditToggle}
+              className="text-blue-600 text-sm font-medium p-1.5 hover:bg-blue-400 hover:text-white rounded-md"
+            >
+              Edit
+            </button>
+            <input
+              type="checkbox"
+              className="w-3.5 h-3.5 md:w-4 md:h-4"
+              onChange={toggleHandler}
+            />
 
-      <div
-        className=" row-span-1 flex flex-row justify-between
-       items-center gap-4 "
-      >
-        <div className="flex flex-row items-center gap-2">
-          <button
-            onClick={deleteTaskHandler}
-            className=" hover:bg-yellow-100 p-2 rounded-md"
-          >
-            <img src={medalIcon} alt="delete icon" className="w-6 h-6" />
-          </button>
-          <p className=" text-xl font-medium text-slate-600">{priority}</p>
-        </div>
-        <div className="flex flex-row  items-center gap-3">
-          <input type="checkbox" className="w-5 h-5" onChange={toggleHandler} />
-          <button
-            onClick={deleteTaskHandler}
-            className=" hover:bg-red-100 active:bg-red-200 p-2 rounded-md"
-          >
-            <img src={deleteIcon} alt="delete icon" className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={deleteTaskHandler}
+              className="hover:bg-red-100 active:bg-red-200 p-2 rounded-md"
+            >
+              <img
+                src={deleteIcon}
+                alt="delete icon"
+                className="w-3.5 h-3.5 md:w-4 md:h-4"
+              />
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

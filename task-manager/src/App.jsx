@@ -8,6 +8,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [search, setSearch] = useState("");
+  const [sortOption, setSortOption] = useState("date");
   const [isModalOpen, setIsModalOpen] = useState();
 
   const openModal = () => setIsModalOpen(true);
@@ -21,6 +22,7 @@ function App() {
         description: task.description,
         priority: task.priority,
         completed: false,
+        date: task.date || new Date().toISOString().split("T")[0],
       },
       ...prev,
     ]);
@@ -29,6 +31,7 @@ function App() {
   const deleteTask = (id) => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
+
   const toggleComplete = (id) => {
     setTasks((prev) =>
       prev.map((prevTask) =>
@@ -36,6 +39,12 @@ function App() {
           ? { ...prevTask, completed: !prevTask.completed }
           : prevTask
       )
+    );
+  };
+
+  const updateTask = (updatedTask) => {
+    setTasks((prev) =>
+      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
   };
 
@@ -54,6 +63,28 @@ function App() {
     setFilteredTasks(matchedTasks);
   };
 
+  const handleSortChange = (e) => {
+    const option = e.target.value;
+    setSortOption(option);
+    let sortedTasks = [...(filteredTasks.length > 0 ? filteredTasks : tasks)];
+
+    if (option === "date") {
+      sortedTasks = sortedTasks.sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+    } else if (option === "priority") {
+      sortedTasks = sortedTasks.sort((a, b) => a.priority - b.priority);
+    } else if (option === "alphabet") {
+      sortedTasks = sortedTasks.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (option === "completed") {
+      sortedTasks = sortedTasks.sort((a, b) => b.completed - a.completed);
+    }
+
+    filteredTasks.length > 0
+      ? setFilteredTasks(sortedTasks)
+      : setTasks(sortedTasks);
+  };
+
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("tasks"));
     if (storedTodos && storedTodos.length > 0) {
@@ -67,12 +98,12 @@ function App() {
   }, [tasks]);
 
   return (
-    <TodoProvider value={{ tasks, addTask, deleteTask, toggleComplete }}>
-      <div className="min-h-screen bg-gray-200 flex p-40  items-start">
-        <div className="flex flex-col gap-4  items-start ">
-          <div className="flex flex-row gap-4 items-center">
+    <TodoProvider value={{ addTask, deleteTask, toggleComplete, updateTask }}>
+      <div className="min-h-screen bg-gray-200 flex  justify-center ">
+        <div className="flex flex-col gap-4 p-4 mt-10">
+          <div className="flex flex-row flex-wrap gap-2  items-center justify-center">
             <form
-              className="flex flex-row gap-2 bg-white rounded-lg shadow-md"
+              className="flex flex-row gap-2 p-2 lg:p-3 bg-white rounded-md md:rounded-lg shadow-sm md:shadow-md"
               id="search-form"
               onSubmit={onSubmitHandler}
             >
@@ -82,36 +113,35 @@ function App() {
                 onChange={(e) => setSearch(e.target.value)}
                 value={search}
                 placeholder="Search"
-                className="h-14 w-96 focus:outline-none text-base p-4 rounded-lg"
+                className=" xl:w-96 focus:outline-none text-sm rounded-lg"
               />
-              <button
-                type="submit"
-                className="px-4 hover:bg-blue-400 hover:rounded-r-lg"
-              >
-                <img src={searchIcon} className="w-6" alt="Search" />
+              <button type="submit" className="ml-auto px-2 hover:rounded-r-lg">
+                <img src={searchIcon} className="w-4 md:w-6" alt="Search" />
               </button>
             </form>
 
             <select
               name="sorting"
               id="sorting"
-              className="h-14 p-4 bg-white focus:outline-none text-base font-semibold rounded-lg shadow-md "
-              disabled
+              className="bg-white focus:outline-none text-sm p-2 lg:p-3 font-semibold rounded-md md:rounded-lg shadow-sm md:shadow-md"
+              value={sortOption}
+              onChange={handleSortChange}
             >
-              <option value="date">Date modified</option>
+              <option value="date">Overdue</option>
               <option value="priority">Priority</option>
               <option value="alphabet">A To Z</option>
+              <option value="completed">Completed</option>
             </select>
 
             <button
               onClick={openModal}
-              className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-base text-white font-semibold p-4 rounded-lg shadow-md"
+              className="p-2 lg:p-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-sm text-white font-semibold  rounded-md md:rounded-lg shadow-sm md:shadow-md"
             >
               + Add Task
             </button>
           </div>
 
-          <div className="h-[800px] grid grid-cols-5 grid-flow-row gap-4 overflow-y-auto no-scrollbar">
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 grid-flow-row gap-2 md:gap-4  ">
             {(filteredTasks.length > 0 ? filteredTasks : tasks).map((task) => (
               <Task key={task.id} task={task} />
             ))}

@@ -6,6 +6,7 @@ const AddTaskModal = ({ isOpen, onClose }) => {
     title: "",
     description: "",
     priority: 4,
+    date: new Date().toISOString().split("T")[0], // Default to today's date
     completed: false,
   };
 
@@ -26,31 +27,38 @@ const AddTaskModal = ({ isOpen, onClose }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTask((prevTask) => ({ ...prevTask, [name]: value }));
+    setTask((prevTask) => ({
+      ...prevTask,
+      [name]: value,
+    }));
   };
 
   return isOpen ? (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-50 flex p-6 justify-center items-center z-50"
       role="dialog"
       aria-labelledby="add-task-title"
       aria-modal="true"
     >
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[500px]">
-        <h2 id="add-task-title" className="text-xl font-bold mb-4">
+      <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 w-[500px]">
+        <h2
+          id="add-task-title"
+          className="text-center md:text-xl font-bold mb-4"
+        >
           Add New Task
         </h2>
-        <form onSubmit={add} className="flex flex-col gap-3 font-medium">
-          <label htmlFor="title" className="text-lg">
-            Enter the title
-          </label>
+        <form
+          onSubmit={add}
+          className="flex flex-col gap-2 md:gap-3 font-medium"
+        >
+          <label htmlFor="title">Enter the title</label>
           <input
             type="text"
             id="title"
             name="title"
             maxLength={22}
-            placeholder="write a task "
-            className="font-normal w-full h-14  border border-black/10 rounded-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
+            placeholder="Write a task"
+            className="font-normal w-full md:h-14 border border-black/10 rounded-lg p-2 md:px-3 md:py-1.5 outline-none duration-150 bg-white/20"
             onChange={handleChange}
             value={task.title}
           />
@@ -58,9 +66,9 @@ const AddTaskModal = ({ isOpen, onClose }) => {
           <textarea
             id="description"
             name="description"
-            maxLength={150}
-            placeholder="write the description "
-            className="font-normal w-full h-20 border border-black/10 rounded-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
+            maxLength={100}
+            placeholder="Write the description"
+            className="font-normal w-full h-20 border border-black/10 rounded-lg p-2 md:px-3 md:py-1.5 outline-none duration-150 bg-white/20"
             onChange={handleChange}
             value={task.description}
           />
@@ -75,10 +83,20 @@ const AddTaskModal = ({ isOpen, onClose }) => {
             onChange={handleChange}
             value={task.priority}
           />
+          <label htmlFor="date">Set Due Date</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            className="w-full border border-black/10 rounded-lg px-3 py-1.5 outline-none duration-150 bg-white/20"
+            onChange={handleChange}
+            value={task.date}
+            min={new Date().toISOString().split("T")[0]}
+          />
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
-              className="text-l px-4 bg-gray-300 hover:text-white hover:bg-red-500 transition-colors ease-in duration-200 rounded-lg "
+              className="text-lg px-4 py-2 bg-gray-300 hover:text-white hover:bg-red-500 transition-colors ease-in duration-200 rounded-lg"
               onClick={onClose}
             >
               Cancel
