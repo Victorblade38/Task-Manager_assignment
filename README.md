@@ -13,7 +13,9 @@ A simple and efficient task management app built with **React**, **JavaScript**,
 
 - **Add Task**: Create tasks with a title, description, priority, and completion status.
 - **Delete Task**: Remove tasks with a smooth fade-out effect.
-- **Search Tasks**: Filter tasks by their title using the search bar.
+- **Update Task**: Update existing task.
+- **Search Tasks**: Search tasks by their title using the search bar.
+- **Filter Task**: Filter tasks based on different options such as ,  overdue, completed,priority.
 - **Confetti Animation**: Celebrate task completion with a colorful confetti animation!
 
 ---
@@ -55,11 +57,14 @@ A simple and efficient task management app built with **React**, **JavaScript**,
 
 2. **Search Tasks**:
    - Use the search bar at the top to find a task by its title.
+     
+3. **Update Tasks**:
+   - Update the existing  task content .
 
-3. **Delete Tasks**:
+4. **Delete Tasks**:
    - Click the "Delete" button on any task to remove it with a fade-out effect.
 
-4. **Mark as Complete**:
+5. **Mark as Complete**:
    - Toggle the checkbox to mark a task as complete. Enjoy the confetti celebration!
 
 ---
