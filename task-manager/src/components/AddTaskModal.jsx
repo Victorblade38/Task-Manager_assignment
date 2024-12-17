@@ -96,7 +96,7 @@ const AddTaskModal = ({ isOpen, onClose }) => {
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
-              className="text-lg px-4 py-2 bg-gray-400 hover:text-white hover:bg-red-500 transition-colors ease-in duration-200 rounded-lg"
+              className="text-lg px-4 py-2 bg-gray-200  hover:text-white hover:bg-red-500 dark:bg-gray-400 dark:hover:bg-red-500 transition-colors ease-in duration-200 rounded-lg"
               onClick={onClose}
             >
               Cancel
