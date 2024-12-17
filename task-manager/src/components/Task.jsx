@@ -6,9 +6,9 @@ import confetti from "canvas-confetti";
 const Task = ({ task }) => {
   const { deleteTask, toggleComplete, updateTask } = useTask();
   const [isFading, setIsFading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // State to track editing mode
-  const [editedTask, setEditedTask] = useState(task); // State for edited task values
-  const { title, description, priority, date, completed } = editedTask;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTask, setEditedTask] = useState(task);
+  const { title, description, priority, date } = editedTask;
 
   const launchConfetti = () => {
     confetti({
@@ -53,13 +53,13 @@ const Task = ({ task }) => {
   };
 
   const handleSaveChanges = () => {
-    updateTask(editedTask); // Save the edited task
-    setIsEditing(false); // Switch back to view mode
+    updateTask(editedTask);
+    setIsEditing(false);
   };
 
   return (
     <div
-      className={` h-40 md:w-80 md:h-64 bg-white shadow-md lg:shadow-lg flex flex-col justify-center gap-2 p-3 md:p-6 rounded-lg  transition-opacity duration-500 ${
+      className={` h-40 md:w-80 md:h-64 bg-white text-gray-800 dark:bg-gray-800  dark:text-white  shadow-md lg:shadow-lg flex flex-col justify-center gap-2 p-3 md:p-6 rounded-lg  transition-all ease-in-out duration-300 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
     >
@@ -106,16 +106,20 @@ const Task = ({ task }) => {
       ) : (
         <>
           <p
-            className={`md:h-12 text-lg md:text-2xl font-bold ${
-              completed ? "line-through text-slate-600" : "text-slate-800"
+            className={`md:h-12 text-lg md:text-2xl  font-bold ${
+              task.completed
+                ? "line-through text-slate-600 dark:text-gray-200"
+                : ""
             }`}
           >
             {title}
           </p>
           <hr />
           <p
-            className={`md:h-24 row-span-2 text-sm font-medium ${
-              completed ? "line-through text-slate-500" : "text-slate-700"
+            className={`md:h-24 row-span-2 text-sm  font-medium ${
+              task.completed
+                ? "line-through text-slate-600 dark:text-gray-200"
+                : ""
             }`}
           >
             {description}
@@ -129,10 +133,7 @@ const Task = ({ task }) => {
                   className="w-4 h-4 md:w-5 md:h-5"
                 />
               </button>
-              <p className="text-sm font-medium text-slate-600">
-                {" "}
-                - {priority}
-              </p>
+              <p className="text-sm font-medium "> - {priority}</p>
             </div>
             <p
               className={` text-sm font-medium ${
@@ -149,6 +150,7 @@ const Task = ({ task }) => {
             </button>
             <input
               type="checkbox"
+              checked={task.completed}
               className="w-3.5 h-3.5 md:w-4 md:h-4"
               onChange={toggleHandler}
             />

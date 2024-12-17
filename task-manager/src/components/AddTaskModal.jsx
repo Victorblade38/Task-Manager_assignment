@@ -40,7 +40,7 @@ const AddTaskModal = ({ isOpen, onClose }) => {
       aria-labelledby="add-task-title"
       aria-modal="true"
     >
-      <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 w-[500px]">
+      <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-lg p-4 md:p-6 w-[500px]">
         <h2
           id="add-task-title"
           className="text-center md:text-xl font-bold mb-4"
@@ -96,7 +96,7 @@ const AddTaskModal = ({ isOpen, onClose }) => {
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
-              className="text-lg px-4 py-2 bg-gray-300 hover:text-white hover:bg-red-500 transition-colors ease-in duration-200 rounded-lg"
+              className="text-lg px-4 py-2 bg-gray-400 hover:text-white hover:bg-red-500 transition-colors ease-in duration-200 rounded-lg"
               onClick={onClose}
             >
               Cancel

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import AddTaskModal from "./components/AddTaskModal";
 import Task from "./components/Task";
-import { searchIcon } from "./assets";
+import { FaSun, FaMoon } from "react-icons/fa";
 import { TodoProvider } from "./context/Todocontext";
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [theme, setTheme] = useState("light");
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [search, setSearch] = useState("");
   const [sortOption, setSortOption] = useState("date");
@@ -13,6 +14,32 @@ function App() {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    if (newTheme === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    localStorage.setItem("theme", newTheme);
+  };
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark");
+      document.body.classList.add("dark");
+    }
+  }, []);
 
   const addTask = (task) => {
     setTasks((prev) => [
@@ -48,11 +75,8 @@ function App() {
     );
   };
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-
+  useEffect(() => {
     if (!search.trim()) {
-      alert("Please enter a valid search term.");
       setFilteredTasks([]);
       return;
     }
@@ -61,7 +85,7 @@ function App() {
       task.title.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredTasks(matchedTasks);
-  };
+  }, [tasks, search]);
 
   const handleSortChange = (e) => {
     const option = e.target.value;
@@ -99,31 +123,21 @@ function App() {
 
   return (
     <TodoProvider value={{ addTask, deleteTask, toggleComplete, updateTask }}>
-      <div className="min-h-screen bg-gray-200 flex  justify-center ">
+      <div className="min-h-screen min-w-screen roboto-regular bg-gray-200 dark:bg-gray-700 flex  justify-center transition-colors ease-in duration-300">
         <div className="flex flex-col gap-4 p-4 mt-10">
           <div className="flex flex-row flex-wrap gap-2  items-center justify-center">
-            <form
-              className="flex flex-row gap-2 p-2 lg:p-3 bg-white rounded-md md:rounded-lg shadow-sm md:shadow-md"
-              id="search-form"
-              onSubmit={onSubmitHandler}
-            >
-              <input
-                type="text"
-                name="search"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                placeholder="Search"
-                className=" xl:w-96 focus:outline-none text-sm rounded-lg"
-              />
-              <button type="submit" className="ml-auto px-2 hover:rounded-r-lg">
-                <img src={searchIcon} className="w-4 md:w-6" alt="Search" />
-              </button>
-            </form>
-
+            <input
+              type="text"
+              name="search"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              placeholder="Search"
+              className="xl:w-96 p-2 lg:p-3 bg-white rounded-md  shadow-sm   focus:outline-none text-sm "
+            />
             <select
               name="sorting"
               id="sorting"
-              className="bg-white focus:outline-none text-sm p-2 lg:p-3 font-semibold rounded-md md:rounded-lg shadow-sm md:shadow-md"
+              className="bg-white focus:outline-none text-sm p-2 lg:p-3 font-semibold rounded-md shadow-sm"
               value={sortOption}
               onChange={handleSortChange}
             >
@@ -135,9 +149,15 @@ function App() {
 
             <button
               onClick={openModal}
-              className="p-2 lg:p-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-sm text-white font-semibold  rounded-md md:rounded-lg shadow-sm md:shadow-md"
+              className="p-2 lg:p-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-sm text-white font-semibold  rounded-md shadow-sm "
             >
               + Add Task
+            </button>
+            <button
+              className="bg-white p-3 rounded-md shadow-sm"
+              onClick={toggleTheme}
+            >
+              {theme === "light" ? <FaSun /> : <FaMoon />}
             </button>
           </div>
 
