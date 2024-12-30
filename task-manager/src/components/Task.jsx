@@ -59,7 +59,7 @@ const Task = ({ task }) => {
 
   return (
     <div
-      className={` h-40 md:w-80 md:h-64 bg-white text-gray-800 dark:bg-gray-800  dark:text-white  shadow-md lg:shadow-lg flex flex-col justify-center gap-2 p-3 md:p-6 rounded-lg  transition-all ease-in-out duration-300 ${
+      className={` h-40 md:w-80 md:h-64 bg-white text-gray-800 dark:bg-gray-800  dark:text-white border-[0.5px] border-gray-400 flex flex-col justify-center gap-2 p-3 md:p-6 rounded-lg  transition-all ease-in-out duration-300 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
     >
