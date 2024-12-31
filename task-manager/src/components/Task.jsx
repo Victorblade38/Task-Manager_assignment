@@ -106,7 +106,7 @@ const Task = ({ task }) => {
       ) : (
         <>
           <p
-            className={`md:h-12 text-lg md:text-2xl  font-bold ${
+            className={`md:h-8 text-lg md:text-2xl  font-bold ${
               task.completed
                 ? "line-through text-slate-600 dark:text-gray-200"
                 : ""
